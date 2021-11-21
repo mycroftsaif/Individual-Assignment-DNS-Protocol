@@ -7,7 +7,7 @@
 #include <netdb.h>                          // For gethostbyname()
 #include <time.h>                           // For time_t
 #define MAXCONNECTION 5                     // Maximum outstanding connection requests
-#define RCVBUFSIZE 1000                      // Size of receive buffer
+#define buffSize 100                      // Size of receive buffer
 
 
 void ErrorMessage(char *errorMessage);      // Error handling function
@@ -55,8 +55,7 @@ char * resolveName(char name[]);
 //*****************     Global variables   ********************//
 
 nodePointer head = NULL;
-char buffer[RCVBUFSIZE];
-char fileLocation[200];
+char buffer[buffSize];
 char respMessg[100];
 char resolveNameMessage[100];
 unsigned int  timeOut;
@@ -151,7 +150,7 @@ void TCPClientHandler(int clntSocket, int serverSock, char clientIp[]){
     int  statusCode = 0;                    // Client request is outside the timeout window and request will be processed directly
 	char line[1024];
     // Receive message from client
-    if ((recvMsgSize = recv(clntSocket, buffer, RCVBUFSIZE, 0)) < 0){
+    if ((recvMsgSize = recv(clntSocket, buffer, buffSize, 0)) < 0){
         ErrorMessage("recv() failed");}
     
     buffer[recvMsgSize]='\0';               //Terminating the receive buffer with null character
@@ -175,7 +174,7 @@ void TCPClientHandler(int clntSocket, int serverSock, char clientIp[]){
 						//2. DNS Library
                         if (buffer[0] == '2'){
                             printf("\n\n\t\tIncoming request from client  %s : Most requested domain\n", clientIp);
-                            printf("\n\t\tDNS Dossier will present at most 3 most requested domains in case of tie b/w counts\n");
+                            printf("\n\t\tDNS Library\n");
 							
 							FILE *fp = fopen("Domain_Library.txt","r");
     
@@ -283,11 +282,11 @@ void TCPClientHandler(int clntSocket, int serverSock, char clientIp[]){
     while (recvMsgSize > 0)      
     {
         /* Echo message back to client */
-        if (send(clntSocket, buffer, RCVBUFSIZE, 0) != RCVBUFSIZE)
+        if (send(clntSocket, buffer, buffSize, 0) != buffSize)
             ErrorMessage("send() failed");
         
         /* See if there is more data to receive */
-        if ((recvMsgSize = recv(clntSocket, buffer, RCVBUFSIZE, 0)) < 0)
+        if ((recvMsgSize = recv(clntSocket, buffer, buffSize, 0)) < 0)
             ErrorMessage("recv() failed");
     }
     printf("\n\t\tSent Response to the Client: %s", buffer);
@@ -304,7 +303,7 @@ void TCPClientHandler(int clntSocket, int serverSock, char clientIp[]){
         strcat(buffer," seconds ago, wait ");
         strcat(buffer,toString(sec,timeOut));
         strcat(buffer," seconds before another submission" );
-        if (send(clntSocket, buffer, RCVBUFSIZE, 0) != RCVBUFSIZE)
+        if (send(clntSocket, buffer, buffSize, 0) != buffSize)
             ErrorMessage("send() failed");
         printf("\n\n\t\tSent Response to the Client: %s", buffer);
         printf("\n\n########################################################################################");
