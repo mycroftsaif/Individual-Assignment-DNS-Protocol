@@ -17,7 +17,7 @@ bool isValidIpAddress(char *ipAddress)
  }
 
 
-#define RCVBUFSIZE 1000             // Size of receive buffer
+#define buffSize 100           // Size of receive buffer
 
 void errorMessage(char *errorMessage);  /* Error handling function */
 char * toString(char str[], int num);
@@ -29,7 +29,7 @@ int main(int argc, char *argv[]){
     int sock;                           // Socket descriptor
     struct sockaddr_in serverAddr;      // Echo server address
     char echoServer[100];               // String to send to echo server
-    char echoBuffer[RCVBUFSIZE];        // Buffer for echo string
+    char echoBuffer[buffSize];        // Buffer for echo string
     unsigned long echoServerLen;        // Length of string to echo
     long bytesRcvd, totalBytesRcvd;     // Bytes read in single recv() and total bytes read
     char *process;                      
@@ -41,7 +41,7 @@ int main(int argc, char *argv[]){
     
     printf("\n\n\tDNS Protocol System Client \t\t\n");
                                                    
-    printf("\n\t\tRequest Code \t\tprocess"
+    printf("\n\t\tRequest Code \t\tProcess"
            "\n\t\t1. \t\t\tFind IP for a domain"
 		   "\n\t\t2. \t\t\tDNS Library "
            "\n\t\t3. \t\t\tDelete a record from the list"
@@ -109,11 +109,11 @@ int main(int argc, char *argv[]){
     
     /* Receive up to the buffer size (minus 1 to leave space for
      a null terminator) bytes from the sender */
-    while (totalBytesRcvd < RCVBUFSIZE)
+    while (totalBytesRcvd < buffSize)
     {
         /* Receive up to the buffer size (minus 1 to leave space for
          a null terminator) bytes from the sender */
-        if ((bytesRcvd = recv(sock, echoBuffer, RCVBUFSIZE - 1, 0)) <= 0)
+        if ((bytesRcvd = recv(sock, echoBuffer, buffSize - 1, 0)) <= 0)
             errorMessage("recv() failed or connection closed prematurely");
         
         totalBytesRcvd += bytesRcvd;                // Keep tally of total bytes
