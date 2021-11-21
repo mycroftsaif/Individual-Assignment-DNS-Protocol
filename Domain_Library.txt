@@ -1,0 +1,4 @@
+www.google.com 1 142.250.199.36 
+www.github.com 0 20.205.243.166 
+www.yahoo.com 0 202.165.107.49 
+www.youtube.com 0 216.58.200.14 
